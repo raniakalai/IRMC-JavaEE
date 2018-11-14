@@ -1,0 +1,32 @@
+html, body {
+    background: #000;
+}
+body {
+    font: 13px "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.pan{
+	
+	margin: auto;
+    width: 30%;
+    border: 3px solid #73AD21;
+    padding: 5px;
+}
+.para{
+	 margin: auto;
+    width: 80%;
+    border: 3px solid #000000;
+    padding: 10px;
+   }
+
+.bat {
+	
+	input[type="submit"].alt:active,
+			input[type="reset"].alt:active,
+			input[type="button"].alt:active,
+			button.alt:active,
+			.button.alt:active {
+				background-color: #7ec89e;
+			}
+}

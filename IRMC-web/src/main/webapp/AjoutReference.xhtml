@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 24%;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 10px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+.ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-title {
+	color: #555;
+}
+</style>
+	<title>todos</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:tabMenu activeIndex="#{param.i}">
+			<p:menuitem value="Articles" icon="ui-icon-star">
+				<f:param name="i" value="0" />
+			</p:menuitem>
+			<p:menuitem value="Videos" icon="ui-icon-search">
+				<f:param name="i" value="1" />
+			</p:menuitem>
+			<p:menuitem value="Libaries" icon="ui-icon-document">
+				<f:param name="i" value="2" />
+			</p:menuitem>
+
+		</p:tabMenu>
+		<br></br>
+		<br></br>
+
+		<p:steps activeIndex="2" styleClass="custom" readonly="false">
+			<p:menuitem value="Article" url="AjoutArticle.jsf" />
+			<p:menuitem value="Auteur" url="AjoutAuteur.jsf" />
+			<p:menuitem value="Reference" url="AjoutReference.jsf" />
+			<p:menuitem value="Confirmation" url="Comfirm.jsf" />
+		</p:steps>
+	</h:form>
+	<br></br>
+	<br></br>
+
+	<p:layout style="min-width:400px;height:353px;">
+
+		<p:layoutUnit position="west" resizable="true" size="500">
+			<h:form>
+				<h2>Choisir les TAgs</h2>
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:panelGrid columns="2">
+						<p:outputLabel for="chips" value="Tags: " />
+						<p:chips id="chips" value="#{articleBean.listTags}" >
+							
+              </p:chips>
+					</h:panelGrid>
+
+				</h:panelGrid>
+				<h:commandButton id="btn" action="#{articleBean.check()}"
+					value="ajouter">
+
+				</h:commandButton>
+
+
+
+			</h:form>
+		</p:layoutUnit>
+
+
+		<p:layoutUnit position="center">
+		<p:messages>
+            <p:autoUpdate />
+        </p:messages>
+			<h:form>
+				<h2>Ajouter une reference</h2>
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-md-6">
+						<h:outputLabel value="Description" />
+
+						<p:inputTextarea value="#{articleBean.ref.description}" rows="5"
+							cols="30" counter="display" maxlength="500" autoResize="false" />
+						<h:outputText id="display" />
+
+
+						<div class="ui-inputgroup">
+						<h:outputLabel for="regex" value="Url:" style="font-weight:bold"/>
+            <p:inputText id="regex" value="#{articleBean.ref.url}" validatorMessage="This is not a valid Url">
+                <f:validateRegex pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?//=]*)" />
+            </p:inputText>
+            <p:message for="regex" />
+							
+						
+						</div>
+
+						<p:commandButton validateClient="true" id="btn" value="ajouter">
+							<f:ajax execute="@form" render="@form :messages"
+								listener="#{articleBean.addReferenceVide()}" />
+						</p:commandButton>
+					</div>
+					<div class="ui-g-12 ui-md-6">
+						<br> </br>
+						<p:dataList value="#{articleBean.listReferenceVide}" var="ref"
+							type="ordered">
+							<f:facet name="header">
+				            Reference
+				        </f:facet>
+				        #{ref.url}, #{ref.description}
+				    </p:dataList>
+
+					</div>
+				</div>
+
+			</h:form>
+		</p:layoutUnit>
+
+	</p:layout>
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</h:body>
+</html>
+

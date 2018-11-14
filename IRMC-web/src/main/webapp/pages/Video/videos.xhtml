@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	   xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>videos</title>
+</h:head>
+<h:body>
+	<h2>Videos</h2>
+	
+	<h3>Already registred videos</h3>
+	<h:dataTable value="#{videoBean.videos}" var="video">
+		<h:column>
+			<h:outputText value="#{video.title} " />
+			<h:outputText value="#{video.description}" />
+		</h:column>
+		<h:column>
+		<video width="600" height="400" controls="controls">
+   			<source src="#{video.url}" type="video/mp4" />
+		</video>
+		</h:column>
+	</h:dataTable >
+
+</h:body>
+</html>

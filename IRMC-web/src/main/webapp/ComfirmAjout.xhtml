@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 24%;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 10px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+.ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-title {
+	color: #555;
+}
+</style>
+	<title>todos</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:tabMenu activeIndex="#{param.i}">
+			<p:menuitem value="Articles" icon="ui-icon-star">
+				<f:param name="i" value="0" />
+			</p:menuitem>
+			<p:menuitem value="Videos" icon="ui-icon-search">
+				<f:param name="i" value="1" />
+			</p:menuitem>
+			<p:menuitem value="Libaries" icon="ui-icon-document">
+				<f:param name="i" value="2" />
+			</p:menuitem>
+
+		</p:tabMenu>
+		<br></br>
+		<br></br>
+
+		<p:steps activeIndex="3" styleClass="custom" readonly="false">
+			<p:menuitem value="Article" url="AjoutArticle.jsf" />
+			<p:menuitem value="Auteur" url="AjoutAuteur.jsf" />
+			<p:menuitem value="Reference" url="AjoutReference.jsf" />
+			<p:menuitem value="Confirmation" url="ComfirmAjout.jsf" />
+		</p:steps>
+	</h:form>
+	<br></br>
+	<br></br>
+	<h:form>
+
+		<div class="ui-g">
+			<div class="ui-g-8 ui-g-nopad">
+				<div class="ui-g-6">
+				<p:dataList value="#{articleBean.listAuteurVide}" var="auteur" type="ordered">
+        <f:facet name="header">
+          les Auteurs
+        </f:facet>
+        #{auteur.nom}, #{auteur.universite},#{auteur.departement}
+    </p:dataList>
+				</div>
+				<div class="ui-g-6">
+				<p:dataList value="#{articleBean.listTagVide}" var="Tag" type="ordered">
+        <f:facet name="header">
+          Tags
+        </f:facet>
+        #{Tag.title}
+    </p:dataList></div>
+				<div class="ui-g-12">
+				<p:dataList value="#{articleBean.listReferenceVide}" var="ref" type="ordered">
+        <f:facet name="header">
+          les References
+        </f:facet>
+        #{ref.description}, #{ref.url}
+    </p:dataList>
+				
+				</div>
+			</div>
+			<div class="ui-g-4">
+			<iframe src="http://localhost:8080/IRMC/#{articleBean.file.fileName}" width="600" height="400" ></iframe>
+			</div>
+		</div>
+
+	</h:form>
+<h:form>
+		<h:commandButton id="btn" action="#{articleBean.addAll()}"
+			value="ajouterfinale">
+
+		</h:commandButton>
+	</h:form>
+</h:body>
+</html>
+

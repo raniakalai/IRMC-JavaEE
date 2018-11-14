@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 24%;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 10px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+.ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-title {
+	color: #555;
+}
+</style>
+	<title>todos</title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<p:tabMenu activeIndex="#{param.i}">
+			<p:menuitem value="Articles" icon="ui-icon-star">
+				<f:param name="i" value="0" />
+			</p:menuitem>
+			<p:menuitem value="Videos" icon="ui-icon-search">
+				<f:param name="i" value="1" />
+			</p:menuitem>
+			<p:menuitem value="Libaries" icon="ui-icon-document">
+				<f:param name="i" value="2" />
+			</p:menuitem>
+
+		</p:tabMenu>
+		<br></br>
+		<br></br>
+
+		<p:steps activeIndex="0" styleClass="custom" readonly="false">
+			<p:menuitem value="Article" url="AjoutArticle.jsf" />
+			<p:menuitem value="Auteur" url="AjoutAuteur.jsf" />
+			<p:menuitem value="Reference" url="AjoutReference.jsf" />
+			<p:menuitem value="Confirmation" url="Comfirm.jsf" />
+		</p:steps>
+	</h:form>
+	<br></br>
+	<br></br>
+	<h:form>
+
+
+		<h:panelGrid columns="2">
+
+			<h:outputLabel value="titre" />
+
+			<h:inputText value="#{articleBean.article.titre}" required="true"></h:inputText>
+			<h:outputLabel value="numero" />
+
+			<h:inputText value="#{articleBean.article.numero}" required="true"></h:inputText>
+
+			<p:outputLabel for="date" value="Date" />
+			<p:calendar id="date" value="#{articleBean.article.date}" />
+
+
+			<p:growl id="messages" showDetail="true" />
+
+
+			<p:fileUpload id="file" value="#{articleBean.file}" mode="advanced"
+				skinSimple="true" multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+				fileUploadListener="#{articleBean.fileUploadListener}">
+
+
+			</p:fileUpload>
+
+
+			<h:outputLabel value="source" />
+			<h:inputText value="#{articleBean.article.source}" required="false"></h:inputText>
+			
+			  <p:outputLabel for="city" value="Pays: " />
+        <p:selectOneMenu id="city" value="#{articleBean.article.pays}" effect="fold" editable="true">
+            <f:selectItem itemLabel="Select One" itemValue="" />
+            <f:selectItems value="#{dtFilterView.listpays}" />
+        </p:selectOneMenu>
+        
+			<h3>Abstrait</h3>
+			<p:inputTextarea value="#{articleBean.article.abstrait}" rows="5"
+				cols="30" counter="display" maxlength="500"
+				counterTemplate="{0} characters remaining." autoResize="false" />
+			<h:outputText id="display" />
+
+			<h:commandButton id="btn" action="#{articleBean.addArticle()}"
+				value="ajouter">
+
+			</h:commandButton>
+			<h:message for="btn" />
+		</h:panelGrid>
+
+	</h:form>
+
+</h:body>
+</html>
+

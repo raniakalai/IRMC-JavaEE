@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+<h:outputStylesheet name="webjars/font-awesome/4.4.0/css/font-awesome.css"></h:outputStylesheet>
+
+	<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 24%;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 10px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+.ui-button {
+	background-color: #4682b4!important;
+	color: #4682b4!important;
+}
+
+.ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-title {
+	color: #555;
+}
+</style>
+	<title>todos</title>
+</h:head>
+<h:body>
+<p:layout fullPage="true">
+ 
+    <p:layoutUnit position="north" size="100" header="Home" resizable="false" closable="false" collapsible="false">
+    </p:layoutUnit>
+    </p:layout>
+	<h:form id="form">
+		<p:tabMenu activeIndex="#{param.i}">
+			<p:menuitem value="Articles" icon="ui-icon-star">
+				<f:param name="i" value="0" />
+			</p:menuitem>
+			<p:menuitem value="Videos" icon="ui-icon-search">
+				<f:param name="i" value="1" />
+			</p:menuitem>
+			<p:menuitem value="Libaries" icon="ui-icon-document">
+				<f:param name="i" value="2" />
+			</p:menuitem>
+
+		</p:tabMenu>
+		<br></br>
+		<p:button href="AjoutArticle.jsf" value="Nouveau article" icon="fa fa-newspaper-o">
+</p:button>
+<p:button href="affichage.jsf" value="Nos Article" icon="fa fa-copy">
+</p:button>
+<p:button href="stat.jsf" value="statistique" icon="fa fa-pie-chart">
+</p:button>
+		<p:dataTable var="article" value="#{dtFilterView.articles}"
+			widgetVar="articleTable"
+			emptyMessage="Aucun article trouvé avec des critères donnés"
+			filteredValue="#{dtFilterView.filteredarticles}">
+
+			<f:facet name="header">
+				<p:outputPanel>
+					<h:outputText value="Rechercher tous les champs:" />
+					<p:inputText id="globalFilter"
+						onkeyup="PF('articleTable').filter()" style="width:150px"
+						placeholder="Entrez un mot-clef" />
+				</p:outputPanel>
+			</f:facet>
+			<p:column style="width:16px">
+				<p:rowToggler />
+			</p:column>
+
+			<p:column filterBy="#{article.titre}" headerText="titre"
+				footerText="titre" filterMatchMode="contains">
+				<h:outputText value="#{article.titre}" />
+			</p:column>
+
+			<p:column filterBy="#{article.date}" headerText="an" footerText="an"
+				filterMatchMode="contains" style="width:250px">
+				<f:facet name="filter">
+					<p:spinner onchange="PF('articleTable').filter()"
+						styleClass="year-spinner" >
+						<f:converter converterId="javax.faces.Integer" />
+					</p:spinner>
+				</f:facet>
+				<h:outputText value="#{article.date}">
+					<f:convertDateTime pattern="yyyy" type="date" />
+				</h:outputText>
+			</p:column>
+			<p:column filterBy="#{article.source}" headerText="source"
+				footerText="source" filterMatchMode="contains">
+				<h:outputText value="#{article.source}" />
+			</p:column>
+			<p:column filterBy="#{article.numero}" headerText="numero"
+				footerText="numero" filterMatchMode="contains">
+				<h:outputText value="#{article.numero}">
+
+				</h:outputText>
+			</p:column>
+			<p:column filterBy="#{article.pays}" headerText="Pays"
+				footerText="Pays" filterMatchMode="in">
+				<f:facet name="filter">
+					<p:selectCheckboxMenu label="Pays"
+						onchange="PF('articleTable').filter()" panelStyle="width:300px"
+						scrollHeight="200">
+						<f:selectItems value="#{dtFilterView.listpays}" />
+					</p:selectCheckboxMenu>
+				</f:facet>
+				<h:outputText value="#{article.pays}" />
+			</p:column>
+			<p:column>
+
+
+				<p:growl id="message" showDetail="true" />
+
+				<p:commandButton  icon="ui-icon-trash"
+					actionListener="#{dtFilterView.destroyWorld()}" update="message">
+					<p:confirm header="Supprimer" message="Êtes-vous sûr?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" icon="fa fa-edit" title="edit">
+                <f:setPropertyActionListener value="#{article}" target="#{dtFilterView.selectedarticle}" />
+            </p:commandButton>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"  >
+					<p:commandButton value="Oui"  title="Supprimer" styleClass="ui-confirmdialog-yes"
+					 	actionListener="#{dtFilterView.remove(article)}" ajax="true"
+						update="@form" />
+					<p:commandButton value="Non" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</p:column>
+
+			<p:rowExpansion>
+				<h:form>
+
+					<div class="ui-g">
+						<div class="ui-g-8 ui-g-nopad">
+							<div class="ui-g-6">
+								<p:dataList value="#{dtFilterView.getInitAuthors(article)}" var="auteur"
+									type="ordered">
+									<f:facet name="header">
+          les Auteurs
+        </f:facet>
+       Nom: #{auteur.nom}  , Universite: #{auteur.universite}
+    </p:dataList>
+							</div>
+							<div class="ui-g-6">
+								<p:dataList value="#{dtFilterView.getInitTags(article)}" var="Tag" type="ordered">
+									<f:facet name="header">
+          Tags
+        </f:facet>
+        #{Tag.title}
+    </p:dataList>
+							</div>
+							<div class="ui-g-12">
+
+								<iframe src="http://localhost:8080/IRMC/#{article.file}"
+									width="600" height="400"></iframe>
+
+							</div>
+						</div>
+						<div class="ui-g-4">
+							<p:dataList value="#{article.references}" var="ref"
+								type="ordered">
+								<f:facet name="header">
+          les References
+        </f:facet>
+        #{ref.description}, #{ref.url}
+    </p:dataList>
+							<br></br>
+							<p:dataList value="#{article}" var="ar" type="definition">
+								<f:facet name="header">
+            Article
+        </f:facet>
+       Date d'ajout: #{ar.date_ajout}
+       <br></br>
+        Date: #{ar.date}
+        <br></br>
+        L'abstrait: #{ar.abstrait}
+    </p:dataList>
+						</div>
+					</div>
+
+				</h:form>
+			</p:rowExpansion>
+		</p:dataTable>
+		 <p:dialog header="Aricle Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+        <p:outputPanel id="carDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty dtFilterView.selectedarticle}" columnClasses="label,value">
+
+ 
+          <h:outputLabel value="titre" />
+
+			<h:inputText value="#{dtFilterView.selectedarticle.titre}" required="true"></h:inputText>
+			<h:outputLabel value="numero" />
+
+			<h:inputText value="#{dtFilterView.selectedarticle.numero}" required="true"></h:inputText>
+
+			<p:outputLabel for="date" value="Date" />
+			<p:calendar id="date" value="#{dtFilterView.selectedarticle.date}" />
+
+
+			<p:growl id="messages" showDetail="true" />
+
+			
+
+			<p:fileUpload id="file" value="#{dtFilterView.selectedarticle.file}"  mode="advanced"
+				skinSimple="true" multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+				fileUploadListener="#{articleBean.fileUploadListener}">
+
+
+			</p:fileUpload>
+
+
+			<h:outputLabel value="source" />
+			<h:inputText value="#{dtFilterView.selectedarticle.source}" required="false"></h:inputText>
+			
+			  <p:outputLabel for="city" value="Pays: " />
+        <p:selectOneMenu id="city" value="#{dtFilterView.selectedarticle.pays}" effect="fold" editable="true">
+            <f:selectItem itemLabel="Select One" itemValue="" />
+            <f:selectItems value="#{dtFilterView.listpays}" />
+        </p:selectOneMenu>
+        
+			<h3>Abstrait</h3>
+			<p:inputTextarea value="#{dtFilterView.selectedarticle.abstrait}" rows="5"
+				cols="30" counter="display" maxlength="500"
+				counterTemplate="{0} characters remaining." autoResize="false" />
+			<h:outputText id="display" />
+
+			<h:commandButton id="btn" action="#{dtFilterView.editArticle()}"
+				value="modifier">
+
+			</h:commandButton>
+			<h:message for="btn" />
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+
+
+
+
+
+
+	</h:form>
+</h:body>
+</html>
